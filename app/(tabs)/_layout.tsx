@@ -13,9 +13,9 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon color={color} name="code" />,
           headerRight: () => (
-            <Link href="/modal" asChild>
+            <Link asChild href="/modal">
               <HeaderButton />
             </Link>
           ),
@@ -25,7 +25,7 @@ export default function TabLayout() {
         name="two"
         options={{
           title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon color={color} name="code" />,
         }}
       />
     </Tabs>
