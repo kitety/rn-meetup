@@ -14,6 +14,7 @@ export default function Profile() {
     username: '',
     website: '',
     avatarUrl: '',
+    fullName: '',
   });
   console.log('state', state);
 
@@ -24,7 +25,7 @@ export default function Profile() {
 
       const { data, error, status } = await supabase
         .from('profiles')
-        .select(`username, website, avatar_url`)
+        .select(`username, website, avatar_url,full_name`)
         .eq('id', session?.user.id)
         .single();
       if (error && status !== 406) {
@@ -35,6 +36,7 @@ export default function Profile() {
         state.username = data.username;
         state.website = data.website;
         state.avatarUrl = data.avatar_url;
+        state.fullName = data.full_name;
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -54,10 +56,12 @@ export default function Profile() {
       username,
       website,
       avatar_url,
+      full_name,
     }: {
       username: string;
       website: string;
       avatar_url: string;
+      full_name: string;
     }) => {
       try {
         state.loading = true;
@@ -68,6 +72,7 @@ export default function Profile() {
           username,
           website,
           avatar_url,
+          full_name,
           updated_at: new Date(),
         };
 
@@ -108,6 +113,13 @@ export default function Profile() {
             onChangeText={(text) => (state.website = text)}
           />
         </View>
+        <View className="self-stretch py-1">
+          <Input
+            label="Full Name"
+            value={state.fullName || ''}
+            onChangeText={(text) => (state.fullName = text)}
+          />
+        </View>
 
         <View className="mt-5 self-stretch py-1">
           <Button
@@ -118,6 +130,7 @@ export default function Profile() {
                 username: state.username,
                 website: state.website,
                 avatar_url: state.avatarUrl,
+                full_name: state.fullName,
               })
             }
           />
