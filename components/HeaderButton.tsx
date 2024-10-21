@@ -23,6 +23,7 @@ export const HeaderButton = forwardRef<typeof Pressable, { onPress?: () => void 
     );
   }
 );
+HeaderButton.displayName = 'HeaderButton';
 
 export const styles = StyleSheet.create({
   headerRight: {
