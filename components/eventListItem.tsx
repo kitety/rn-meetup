@@ -9,7 +9,7 @@ interface IEventListItemProps {
   event: IEvent;
 }
 const EventListItem: FC<IEventListItemProps> = ({ event }) => {
-  const dayjsObject = dayjs(event.datetime);
+  const dayjsObject = dayjs(event.date);
   const timeStr = dayjsObject.format('ddd D MMM · hh:mm A');
   return (
     <Link asChild href={`/event/${event.id}`}>
@@ -21,7 +21,7 @@ const EventListItem: FC<IEventListItemProps> = ({ event }) => {
             <Text className="text-gray-700">{event.location}</Text>
           </View>
           {/* image */}
-          <Image className="aspect-video w-2/5 rounded-lg" source={{ uri: event.image }} />
+          <Image className="aspect-video w-2/5 rounded-lg" source={{ uri: event.image_uri }} />
         </View>
         {/* footer */}
         <View className="flex-row gap-3">

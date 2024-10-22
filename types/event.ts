@@ -1,8 +1,10 @@
 export interface IEvent {
-  id: string;
-  title: string;
+  created_at: string;
+  date: string;
   description: string;
-  datetime: string;
+  id: number;
+  image_uri: string;
   location: string;
-  image: string;
+  title: string;
+  user_id: string;
 }
