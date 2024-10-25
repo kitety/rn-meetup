@@ -11,7 +11,9 @@ export default function Home() {
     events: [],
   });
   const fetchEvents = async () => {
-    const { data: events, error } = await supabase.from('events').select('*');
+    const { data: events, error } = await supabase
+      .from('events')
+      .select('*,attendees: attendance(count)');
     if (error) {
       console.error(error);
     }

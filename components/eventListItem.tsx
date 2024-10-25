@@ -25,7 +25,7 @@ const EventListItem: FC<IEventListItemProps> = ({ event }) => {
         </View>
         {/* footer */}
         <View className="flex-row gap-3">
-          <Text className="mr-auto text-gray-700">16 going</Text>
+          <Text className="mr-auto text-gray-700">{event.attendees[0].count} going</Text>
           <Feather color="gray" name="share" size={20} />
           <Feather color="gray" name="bookmark" size={22} />
         </View>

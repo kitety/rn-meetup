@@ -7,4 +7,9 @@ export interface IEvent {
   location: string;
   title: string;
   user_id: string;
+  attendees: [
+    {
+      count: number;
+    },
+  ];
 }
