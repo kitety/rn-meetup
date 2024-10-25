@@ -1,6 +1,6 @@
 import { useMount, useReactive, useUnmountedRef } from 'ahooks';
 import dayjs from 'dayjs';
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { Href, Link, Stack, useLocalSearchParams } from 'expo-router';
 import { ActivityIndicator, Image, Pressable, Text, View } from 'react-native';
 import { useAuth } from '~/contexts/authProvider';
 import { IEvent } from '~/types/event';
@@ -91,6 +91,9 @@ const EventPage = () => {
       <Text className="text-3xl font-bold">{event.title}</Text>
       <Text className="text-lg font-semibold uppercase text-amber-800">{timeStr}</Text>
       <Text className="text-lg">{event.description}</Text>
+      <Link href={`/event/${event.id}/attendance` as Href<string>}>
+        <Text className="text-lg">View Attendance</Text>
+      </Link>
       {/* footer */}
       <View className="absolute bottom-0 left-0 right-0 flex-row items-center justify-between border-t-2 border-gray-400 p-5 pb-10">
         <Text className="text-2xl font-bold ">111</Text>
