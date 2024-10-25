@@ -2,28 +2,55 @@ import { useMount, useReactive, useUnmountedRef } from 'ahooks';
 import dayjs from 'dayjs';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { ActivityIndicator, Image, Pressable, Text, View } from 'react-native';
+import { useAuth } from '~/contexts/authProvider';
 import { IEvent } from '~/types/event';
 import { supabase } from '~/utils/supabase';
 
 const EventPage = () => {
+  const { user } = useAuth();
   const unmountedRef = useUnmountedRef();
-  const state = useReactive<{ event: IEvent | null; loading: boolean }>({
+  const state = useReactive<{ event: IEvent | null; loading: boolean; isJoined: boolean }>({
     event: null,
     loading: true,
+    isJoined: false,
   });
   const { id } = useLocalSearchParams();
   const fetchEvent = async () => {
     state.loading = true;
-    const { data, error } = await supabase.from('events').select('*').eq('id', id).single();
-
+    const fetchEventPromise = supabase.from('events').select('*').eq('id', id).single();
+    const fetchJoinedPromise = supabase
+      .from('attendance')
+      .select('*')
+      .eq('user_id', user?.id)
+      .eq('event_id', id)
+      .single();
+    const [{ data, error }, { data: joinedData }] = await Promise.all([
+      fetchEventPromise,
+      fetchJoinedPromise,
+    ]);
     if (unmountedRef.current || error) return;
     state.event = data;
     state.loading = false;
+    state.isJoined = !!joinedData;
   };
   useMount(() => {
     fetchEvent();
   });
+
   const event = state.event;
+  const handleJoin = async () => {
+    // upsert检查是不是已经在数据库中了
+    const { error } = await supabase
+      .from('attendance')
+      .upsert({ user_id: user?.id, event_id: event?.id })
+      .select()
+      .single();
+    if (error) {
+      console.log('error', error);
+    } else {
+      state.isJoined = true;
+    }
+  };
   if (state.loading) {
     return (
       <>
@@ -67,9 +94,13 @@ const EventPage = () => {
       {/* footer */}
       <View className="absolute bottom-0 left-0 right-0 flex-row items-center justify-between border-t-2 border-gray-400 p-5 pb-10">
         <Text className="text-2xl font-bold ">111</Text>
-        <Pressable className="rounded-md bg-red-500 p-5 px-8">
-          <Text className="text-lg font-bold text-white">Join and RSVP</Text>
-        </Pressable>
+        {state.isJoined ? (
+          <Text className="text-2xl font-bold text-green-400">Joined</Text>
+        ) : (
+          <Pressable className="rounded-md bg-red-500 p-5 px-8" onPress={handleJoin}>
+            <Text className="text-lg font-bold text-white">Join and RSVP</Text>
+          </Pressable>
+        )}
       </View>
     </View>
   );
